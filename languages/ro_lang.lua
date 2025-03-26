@@ -19,4 +19,7 @@ Locales["ro_lang"] = {
     headerFillBuckets = "Umple Galeti",
     headerFillBottles = "Umple Sticle",
     canteenDesc = "Un recipient portabil pentru a transporta apa.",
+    feelingSick = "Te simți rău din cauza apei...",
+    feelingBetter = "Te simți mai bine acum.",
+    succumbed = "Ai cedat bolii...",
 }
