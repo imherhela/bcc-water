@@ -277,15 +277,7 @@ function DrinkBottle(sourceType)
 
     local boneIndex = GetEntityBoneIndexByName(playerPed, 'SKEL_R_Finger12')
 
-    -- Choose bottle model based on sourceType
-    local modelHash
-    if sourceType == "wild" then
-        modelHash = joaat('p_bottlebeer01a_1')
-    elseif sourceType == "pump" then
-        modelHash = joaat('p_bottlebeer01a_2')
-    else
-        modelHash = joaat('p_bottlebeer01a')
-    end
+    local modelHash = joaat('p_bottlebeer01a_2')
 
     local animDict = "amb_rest_drunk@world_human_drinking@female_b@idle_a"
     local animName = "idle_a"
@@ -294,7 +286,7 @@ function DrinkBottle(sourceType)
     end
 
     LoadAnim(animDict)
-    LoadModel(modelHash, 'DynamicBottleModel')
+    LoadModel(modelHash, 'p_bottlebeer01a_2')
 
     local coords = GetEntityCoords(playerPed)
     local Bottle = CreateObject(modelHash, coords.x, coords.y, coords.z, true, true, false, false, true)
