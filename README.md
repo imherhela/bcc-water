@@ -20,6 +20,7 @@
 - [vorp_core](https://github.com/VORPCORE/vorp-core-lua)
 - [vorp_inventory](https://github.com/VORPCORE/vorp_inventory-lua)
 - [bcc-utils](https://github.com/BryceCanyonCounty/bcc-utils)
+- [feather-menu](https://github.com/FeatherFramework/feather-menu/releases/tag/1.2.0)
 
 ## Supported Metabolism Scripts
 
