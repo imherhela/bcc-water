@@ -4,7 +4,7 @@ Config = {
     ---------------------------------------------------------------
 
     devMode = {
-        active  = false,      -- When active, you can restart the script while connected for testing (otherwise requires relog)
+        active  = true,      -- When active, you can restart the script while connected for testing (otherwise requires relog)
         command = 'WaterDev', -- Command to start the script functions
     },
     ---------------------------------------------------------------
@@ -18,7 +18,7 @@ Config = {
     -- NXT Metabolism Paid          = 7
     -- Andrade Metabolism Paid      = 8
     -- FX-HUD                       = 9
-    app = 1,
+    app = 5,
     ---------------------------------------------------------------
 
     keys = {
@@ -62,16 +62,23 @@ Config = {
             bucketAmount = 5  -- Maximum Amount of Buckets to Fill at Once
         }
     },
+
+    sicknessChance = 25,
+
     ---------------------------------------------------------------
 
     -- Item Names from Database
     canteen     = 'canteen',
 
     emptyBucket = 'wateringcan_empty',
-    fullBucket  = 'wateringcan',
+    cleanBucket = 'wateringcan',
+	dirtyBucket = 'wateringcan_dirtywater',
 
     emptyBottle = 'bcc_empty_bottle',
-    fullBottle  = 'bcc_full_bottle',
+    cleanBottle = 'bcc_clean_bottle',
+	dirtyBottle = 'bcc_dirty_bottle',
+
+    antidoteItem = 'antidote', -- Item name that cures sickness
     ---------------------------------------------------------------
 
     durability = {
