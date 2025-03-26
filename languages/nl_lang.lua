@@ -19,4 +19,7 @@ Locales["nl_lang"] = {
     headerFillBuckets = "Emmer vullen",
     headerFillBottles = "Flessen vullen",
     canteenDesc = "Een draagbare container om water mee te nemen.",
+    feelingSick = "Je voelt je ziek van het water...",
+    feelingBetter = "Je voelt je nu beter.",
+    succumbed = "Je bent bezweken aan de ziekte...",
 }
