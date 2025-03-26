@@ -19,4 +19,8 @@ Locales["de_lang"] = {
     headerFillBuckets = "Eimer füllen",
     headerFillBottles = "Flaschen füllen",
     canteenDesc = "Ein tragbarer Behälter zum Transport von Wasser.",
+    feelingSick = "Dir ist vom Wasser schlecht geworden...",
+    feelingBetter = "Dir geht es jetzt besser.",
+    succumbed = "Du bist der Krankheit erlegen...",
 }
+
