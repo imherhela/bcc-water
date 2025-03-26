@@ -72,13 +72,9 @@ local function FillContainer(pumpAnim, modelName, modelHash, notificationMessage
         SetModelAsNoLongerNeeded(modelHash)
         AttachEntityToEntity(Container, playerPed, boneIndex, 0.12, 0.00, -0.10, 306.0, 18.0, 0.0, true, true, false, true, 2, true)
 
-        local animDict = "amb_work@world_human_crouch_inspect@female_a@idle_a"
+        local animDict = "amb_work@world_human_crouch_inspect@male_c@idle_a"
         local animName = "idle_a"
-        if IsPedMale(playerPed) then
-            animDict = "amb_work@world_human_crouch_inspect@male_c@idle_a"
-            animName = "idle_a"
-        end
-
+        
         LoadAnim(animDict)
 
         TaskSetCrouchMovement(playerPed, true, 0, false)
