@@ -19,4 +19,7 @@ Locales["en_lang"] = {
     headerFillBuckets = "Fill Buckets",
     headerFillBottles = "Fill Bottles",
     canteenDesc = "A portable container to carry water.",
+    feelingSick = "You're feeling sick from the water...",
+    feelingBetter = "You're feeling better now.",
+    succumbed = "You've succumbed to the sickness...",
 }
