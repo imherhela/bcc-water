@@ -215,11 +215,7 @@ function DrinkCanteen()
     local boneIndex = GetEntityBoneIndexByName(playerPed, 'SKEL_R_Finger12')
     local modelHash = joaat('p_cs_canteen_hercule')
 
-    local animDict = "amb_rest_drunk@world_human_drinking@female_b@idle_a"
-    if IsPedMale(playerPed) then
-        animDict = "amb_rest_drunk@world_human_drinking@male_a@idle_a"
-    end
-
+    local animDict = "amb_rest_drunk@world_human_drinking@male_a@idle_a"
 
     LoadAnim(animDict)
     LoadModel(modelHash, 'p_cs_canteen_hercule')
