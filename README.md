@@ -12,7 +12,7 @@
   - Drink directly from natural water sources to preserve canteen water.
 - **Health and Stamina Configurations**: Separate settings for drinking from canteens and wild waters.
 - **Hygiene Options**: Players can wash in rivers, lakes, and at water pumps or sinks.
-- **Risk Factor**: Players may take damage from drinking untreated wild water.
+- **Risk Factor**: Players may get sick and perish after drinking wild water (even from a bottle).
 - **Utility**: Fill water buckets and bottles for use in other scripts.
 
 ## Dependencies
