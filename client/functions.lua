@@ -72,12 +72,18 @@ local function FillContainer(pumpAnim, modelName, modelHash, notificationMessage
         SetModelAsNoLongerNeeded(modelHash)
         AttachEntityToEntity(Container, playerPed, boneIndex, 0.12, 0.00, -0.10, 306.0, 18.0, 0.0, true, true, false, true, 2, true)
 
-        local animDict = 'amb_work@world_human_crouch_inspect@male_c@idle_a'
+        local animDict = "amb_work@world_human_crouch_inspect@female_a@idle_a"
+        local animName = "idle_a"
+        if IsPedMale(playerPed) then
+            animDict = "amb_work@world_human_crouch_inspect@male_c@idle_a"
+            animName = "idle_a"
+        end
+
         LoadAnim(animDict)
 
         TaskSetCrouchMovement(playerPed, true, 0, false)
         Wait(1500)
-        TaskPlayAnim(playerPed, animDict, 'idle_a', 1.0, 1.0, -1, 3, 1.0, false, false, false)
+        TaskPlayAnim(playerPed, animDict, animName, 1.0, 1.0, -1, 3, 1.0, false, false, false)
         Wait(10000)
         TaskSetCrouchMovement(playerPed, false, 0, false)
         Wait(1500)
@@ -85,7 +91,7 @@ local function FillContainer(pumpAnim, modelName, modelHash, notificationMessage
         DeleteObject(Container)
     else
         local taskRun = false
-        local DataStruct = DataView.ArrayBuffer(256 * 4) -- Dataview snippet credit to Xakra and Ricx
+        local DataStruct = DataView.ArrayBuffer(256 * 4)
         local pointsExist = GetScenarioPointsInArea(PlayerCoords, 2.0, DataStruct:Buffer(), 10)
 
         if not pointsExist then goto NEXT end
@@ -105,7 +111,13 @@ local function FillContainer(pumpAnim, modelName, modelHash, notificationMessage
 
         ::NEXT::
         if not taskRun then
-            PlayAnim('amb_work@prop_human_pump_water@female_b@idle_a', 'idle_a')
+            local animDict = "amb_work@prop_human_pump_water@female_b@idle_a"
+            local animName = "idle_a"
+            if IsPedMale(playerPed) then
+                animDict = "amb_work@prop_human_pump_water@male_b@idle_a"
+                animName = "idle_a"
+            end
+            PlayAnim(animDict, animName)
         end
     end
 
@@ -132,17 +144,17 @@ function BucketFill(pumpAnim)
     DebugPrint("Filling bucket.")
     Filling = true
     local playerPed = PlayerPedId()
-    HidePedWeapons(playerPed, 2, true) -- Hide Guns
+    HidePedWeapons(playerPed, 2, true)
 
     if not pumpAnim then
         TaskStartScenarioInPlaceHash(playerPed, joaat('WORLD_HUMAN_BUCKET_FILL'), -1, true, 0, -1, false)
         Wait(8000)
         ClearPedTasks(playerPed, true, true)
         Wait(4000)
-        HidePedWeapons(playerPed, 2, true) -- Hide Bucket
+        HidePedWeapons(playerPed, 2, true)
     else
         local taskRun = false
-        local DataStruct = DataView.ArrayBuffer(256 * 4) -- Dataview snippet credit to Xakra and Ricx
+        local DataStruct = DataView.ArrayBuffer(256 * 4)
         local pointsExist = GetScenarioPointsInArea(PlayerCoords, 2.0, DataStruct:Buffer(), 10)
 
         if not pointsExist then goto NEXT end
@@ -158,14 +170,20 @@ function BucketFill(pumpAnim)
                 Wait(15000)
                 ClearPedTasks(playerPed, true, true)
                 Wait(5000)
-                HidePedWeapons(playerPed, 2, true) -- Hide Bucket
+                HidePedWeapons(playerPed, 2, true)
                 break
             end
         end
 
         ::NEXT::
         if not taskRun then
-            PlayAnim('amb_work@prop_human_pump_water@female_b@idle_a', 'idle_a')
+            local animDict = "amb_work@prop_human_pump_water@female_b@idle_a"
+            local animName = "idle_a"
+            if IsPedMale(playerPed) then
+                animDict = "amb_work@prop_human_pump_water@male_b@idle_a"
+                animName = "idle_a"
+            end
+            PlayAnim(animDict, animName)
         end
     end
 
@@ -196,7 +214,12 @@ function DrinkCanteen()
 
     local boneIndex = GetEntityBoneIndexByName(playerPed, 'SKEL_R_Finger12')
     local modelHash = joaat('p_cs_canteen_hercule')
-    local animDict = 'amb_rest_drunk@world_human_drinking@male_a@idle_a'
+
+    local animDict = "amb_rest_drunk@world_human_drinking@female_b@idle_a"
+    if IsPedMale(playerPed) then
+        animDict = "amb_rest_drunk@world_human_drinking@male_a@idle_a"
+    end
+
 
     LoadAnim(animDict)
     LoadModel(modelHash, 'p_cs_canteen_hercule')
@@ -212,34 +235,126 @@ function DrinkCanteen()
     DeleteObject(Canteen)
     ClearPedTasks(playerPed)
     PlayerStats(false)
+
 end
 
 function WildDrink()
     DebugPrint("Drinking from wild water.")
-    PlayAnim('amb_rest_drunk@world_human_bucket_drink@ground@male_a@idle_c', 'idle_h')
+    PlayAnim("amb_rest_drunk@world_human_bucket_drink@ground@male_a@idle_c", "idle_h")
     PlayerStats(true)
+
+    -- Sickness chance roll
+    if math.random(1, 100) <= Config.sicknessChance then
+        ApplySicknessEffect()
+	end
 end
+
+RegisterNetEvent('bcc-water:UseBottleClean', function()
+    DebugPrint("Drinking clean bottled water.")
+
+    local ped = PlayerPedId()
+    PlayAnim("amb_rest_drunk@world_human_drinking@male_a@idle_a", "idle_a")
+    PlayerStats(false) -- safe
+end)
+
+RegisterNetEvent('bcc-water:UseBottleDirty', function()
+    DebugPrint("Drinking wild bottled water.")
+
+    local ped = PlayerPedId()
+    PlayAnim("amb_rest_drunk@world_human_drinking@male_a@idle_a", "idle_a")
+    PlayerStats(true)
+
+    if math.random(1, 100) <= Config.sicknessChance then
+        ApplySicknessEffect()
+    end
+end)
+
+-- Function
+function DrinkBottle(sourceType)
+    DebugPrint("Drinking from bottle. Source: " .. tostring(sourceType))
+    local playerPed = PlayerPedId()
+    HidePedWeapons(playerPed, 2, true)
+
+    local boneIndex = GetEntityBoneIndexByName(playerPed, 'SKEL_R_Finger12')
+
+    -- Choose bottle model based on sourceType
+    local modelHash
+    if sourceType == "wild" then
+        modelHash = joaat('p_bottlebeer01a_1')
+    elseif sourceType == "pump" then
+        modelHash = joaat('p_bottlebeer01a_2')
+    else
+        modelHash = joaat('p_bottlebeer01a')
+    end
+
+    local animDict = "amb_rest_drunk@world_human_drinking@female_b@idle_a"
+    local animName = "idle_a"
+    if IsPedMale(playerPed) then
+        animDict = "amb_rest_drunk@world_human_drinking@male_a@idle_a"
+    end
+
+    LoadAnim(animDict)
+    LoadModel(modelHash, 'DynamicBottleModel')
+
+    local coords = GetEntityCoords(playerPed)
+    local Bottle = CreateObject(modelHash, coords.x, coords.y, coords.z, true, true, false, false, true)
+    SetEntityVisible(Bottle, true)
+    SetEntityAlpha(Bottle, 255, false)
+    SetModelAsNoLongerNeeded(modelHash)
+
+    TaskPlayAnim(playerPed, animDict, animName, 1.0, 1.0, 5000, 31, 0.0, false, false, false)
+    AttachEntityToEntity(Bottle, playerPed, boneIndex, 0.02, 0.028, 0.001, 15.0, 175.0, 0.0, true, true, false, true, 1, true, false, false)
+    Wait(5500)
+
+    DeleteObject(Bottle)
+    ClearPedTasks(playerPed)
+
+    -- Apply effects
+    if sourceType == "wild" then
+        PlayerStats(true)
+        if math.random(1, 100) <= Config.sicknessChance then
+            ApplySicknessEffect()
+        end
+    else
+        PlayerStats(false)
+    end
+end
+
 
 function PumpDrink()
     DebugPrint("Drinking from pump water.")
-    PlayAnim('amb_work@prop_human_pump_water@male_a@idle_c', 'idle_g')
+    local playerPed = PlayerPedId()
+    local animDict = "amb_work@prop_human_pump_water@female_b@idle_c"
+    local animName = "idle_g"
+    if IsPedMale(playerPed) then
+        animDict = "amb_work@prop_human_pump_water@male_a@idle_a"
+        animName = "idle_a"
+    end
+    PlayAnim(animDict, animName)
     PlayerStats(true)
 end
 
 function WashPlayer(animType)
     DebugPrint("Washing player with animation type: " .. animType)
     local playerPed = PlayerPedId()
-    local animMap = {
-        ground = 'amb_misc@world_human_wash_face_bucket@ground@male_a@idle_d',
-        stand = 'amb_misc@world_human_wash_face_bucket@table@male_a@idle_d'
-    }
 
-    if animMap[animType] then
-        PlayAnim(animMap[animType], 'idle_l')
+    local animDict = ""
+    local animName = "idle_l"
+
+    if animType == "ground" then
+        animDict = IsPedMale(playerPed)
+            and "amb_misc@world_human_wash_face_bucket@ground@male_a@idle_d"
+            or "amb_misc@world_human_wash_face_bucket@ground@female_a@idle_d"
+    elseif animType == "stand" then
+        animDict = IsPedMale(playerPed)
+            and "amb_misc@world_human_wash_face_bucket@table@male_a@idle_d"
+            or "amb_misc@world_human_wash_face_bucket@table@female_a@idle_d"
     else
         print('Invalid animType provided:', animType)
         return
     end
+
+    PlayAnim(animDict, animName)
 
     ClearPedEnvDirt(playerPed)
     ClearPedDamageDecalByZone(playerPed, 10, 'ALL')
@@ -247,6 +362,7 @@ function WashPlayer(animType)
     SetPedDirtCleaned(playerPed, 0.0, -1, true, true)
     DebugPrint("Player washed successfully.")
 end
+
 
 function PlayerStats(isWild)
     DebugPrint("Updating player stats.")
