@@ -8,6 +8,7 @@ Filling = false
 PlayerCoords = vector3(0, 0, 0)
 DevModeActive = Config.devMode.active
 
+
 function DebugPrint(message)
     if DevModeActive then
         print(message)
@@ -16,7 +17,7 @@ end
 
 -- Create and start prompts
 local function CreatePrompt(keyCode, textKey, groups)
-    DebugPrint("Creating prompt with keyCode: " .. keyCode .. ", textKey: " .. textKey)
+    DebugPrint('Creating prompt with keyCode: ' .. keyCode .. ', textKey: ' .. textKey)
     local prompt = UiPromptRegisterBegin()
     UiPromptSetControlAction(prompt, keyCode)
     UiPromptSetText(prompt, CreateVarString(10, 'LITERAL_STRING', _U(textKey)))
@@ -26,18 +27,18 @@ local function CreatePrompt(keyCode, textKey, groups)
         UiPromptSetGroup(prompt, group, 0)
     end
     UiPromptRegisterEnd(prompt)
-    DebugPrint("Prompt created successfully.")
+    DebugPrint('Prompt created successfully.')
     return prompt
 end
 
 local function StartPrompts()
-    DebugPrint("Starting prompts...")
+    DebugPrint('Starting prompts...')
     Prompts.FillCanteenPrompt = CreatePrompt(Config.keys.fillCanteen.code, 'fillCanteen', { WaterGroup, PumpGroup })
     Prompts.FillBucketPrompt = CreatePrompt(Config.keys.fillBucket.code, 'fillBucket', { WaterGroup, PumpGroup })
     Prompts.FillBottlePrompt = CreatePrompt(Config.keys.fillBottle.code, 'fillBottle', { WaterGroup, PumpGroup })
     Prompts.WashPrompt = CreatePrompt(Config.keys.wash.code, 'wash', { WaterGroup, PumpGroup })
     Prompts.DrinkPrompt = CreatePrompt(Config.keys.drink.code, 'drink', { WaterGroup, PumpGroup })
-    DebugPrint("Prompts started successfully.")
+    DebugPrint('Prompts started successfully.')
 end
 
 -- Create prompt text on-screen when not using prompt buttons
@@ -52,7 +53,7 @@ end
 ---@param itemType string
 ---@param pump boolean
 local function ManageItems(itemType, pump)
-    DebugPrint("ManageItems function called with itemType: " .. itemType .. ", pump: " .. tostring(pump))
+    DebugPrint('ManageItems function called with itemType: ' .. itemType .. ', pump: ' .. tostring(pump))
 
     local config = pump and Config.pump or Config.wild
 
@@ -71,23 +72,25 @@ end
 
 -- Start main functions when character is selected
 RegisterNetEvent('vorp:SelectedCharacter', function()
-    DebugPrint("Character selected, starting main functions...")
+    DebugPrint('Character selected, starting main functions...')
     StartPrompts()
 
     if Config.pump.active then
-        DebugPrint("Triggering PumpWater event.")
+        DebugPrint('Triggering PumpWater event.')
         TriggerEvent('bcc-water:PumpWater')
     end
 
     if Config.wild.active then
-        DebugPrint("Triggering WildWater event.")
+        DebugPrint('Triggering WildWater event.')
         TriggerEvent('bcc-water:WildWater')
     end
+
+    TriggerServerEvent('bcc-water:CheckSickness')
+    DebugPrint('Checking server for player sickness.')
 
     while true do
         Wait(1000)
         PlayerCoords = GetEntityCoords(PlayerPedId())
-			TriggerServerEvent("bcc-water:CheckSickness")
     end
  end)
 
@@ -95,24 +98,26 @@ RegisterNetEvent('vorp:SelectedCharacter', function()
 CreateThread(function()
     if Config.devMode.active then
         RegisterCommand(Config.devMode.command, function()
-            DebugPrint("Restarting main functions for development...")
+            DebugPrint('Restarting main functions for development...')
             StartPrompts()
 
             if Config.pump.active then
-                DebugPrint("Triggering PumpWater event for development.")
+                DebugPrint('Triggering PumpWater event for development.')
                 TriggerEvent('bcc-water:PumpWater')
             end
 
             if Config.wild.active then
-                DebugPrint("Triggering WildWater event for development.")
+                DebugPrint('Triggering WildWater event for development.')
                 TriggerEvent('bcc-water:WildWater')
             end
+
+            TriggerServerEvent('bcc-water:CheckSickness')
+            DebugPrint('Checking server for player sickness.')
 
             while true do
                 Wait(1000)
                 PlayerCoords = GetEntityCoords(PlayerPedId())
             end
-                TriggerServerEvent("bcc-water:CheckSickness")
         end, false)
     end
 end)
@@ -170,7 +175,7 @@ local function HandleWaterInteraction(configType, promptGroup, actions, promptNa
                         else
                             action.func()
                         end
-                        DebugPrint("Action performed: " .. action.fullKey)
+                        DebugPrint('Action performed: ' .. action.fullKey)
                     else
                         Filling = false
                         goto END
@@ -185,7 +190,7 @@ local function HandleWaterInteraction(configType, promptGroup, actions, promptNa
 end
 
 AddEventHandler('bcc-water:PumpWater', function()
-    DebugPrint("PumpWater event triggered.")
+    DebugPrint('PumpWater event triggered.')
 
     local pumpActions = {
         {configKey = 'canteen', prompt = 'FillCanteenPrompt', callback = 'bcc-water:GetCanteenLevel', func = CanteenFill, param = {true}, fullKey = 'fillCanteen', offset = 0.2},
@@ -194,7 +199,7 @@ AddEventHandler('bcc-water:PumpWater', function()
         {configKey = 'wash',    prompt = 'WashPrompt', func = WashPlayer, param = {'stand'}, fullKey = 'wash', offset = 0.3},
         {configKey = 'drink',   prompt = 'DrinkPrompt', func = PumpDrink, param = {}, fullKey = 'drink', offset = 0.4}
     }
-    
+
     HandleWaterInteraction(
         Config.pump,
         PumpGroup,
@@ -212,7 +217,7 @@ AddEventHandler('bcc-water:PumpWater', function()
 end)
 
 AddEventHandler('bcc-water:WildWater', function()
-    DebugPrint("WildWater event triggered.")
+    DebugPrint('WildWater event triggered.')
 
     local wildActions = {
         {configKey = 'canteen', prompt = 'FillCanteenPrompt', callback = 'bcc-water:GetCanteenLevel', func = CanteenFill, param = {false}, fullKey = 'fillCanteen', offset = 0.2},
@@ -221,7 +226,7 @@ AddEventHandler('bcc-water:WildWater', function()
         {configKey = 'wash',    prompt = 'WashPrompt', func = WashPlayer, param = {'ground'}, fullKey = 'wash', offset = 0.3},
         {configKey = 'drink',   prompt = 'DrinkPrompt', func = WildDrink, param = {}, fullKey = 'drink', offset = 0.4}
     }
-    
+
     HandleWaterInteraction(
         Config.wild,
         WaterGroup,
@@ -234,12 +239,12 @@ AddEventHandler('bcc-water:WildWater', function()
             return _U('wildWater') -- fallback
         end,
         function()
-            local ped = PlayerPedId()
-            if not IsEntityInWater(ped) then return false end
+            local playerPed = PlayerPedId()
+            if not IsEntityInWater(playerPed) then return false end
             local hash = GetWaterMapZoneAtCoords(PlayerCoords.x, PlayerCoords.y, PlayerCoords.z)
             for _, loc in pairs(Locations) do
                 if loc.hash == hash then
-                    return (not Config.crouch or GetPedCrouchMovement(ped) ~= 0) and IsPedStill(ped)
+                    return (not Config.crouch or GetPedCrouchMovement(playerPed) ~= 0) and IsPedStill(playerPed)
                 end
             end
             return false
@@ -247,118 +252,18 @@ AddEventHandler('bcc-water:WildWater', function()
     )
 end)
 
-local isSick = false
-
-function ApplySicknessEffect(duration, tickInterval)
-    if isSick then
-        DebugPrint("Sickness effect already active, skipping.")
-        return
-    end
-
-    isSick = true
-    duration = duration or 180
-    tickInterval = tickInterval or 15
-    local healthPerTick = 50 -- 🔥 Amount of health to remove per tick
-    local remaining = duration
-
-    DebugPrint(string.format("Applying sickness effect: duration = %ds, tickInterval = %ds", duration, tickInterval))
-
-    Core.NotifyRightTip("You feel sick from the water...", 4000)
-
-    -- Timer thread (unchanged)
-    CreateThread(function()
-        while isSick and remaining > 0 do
-            Wait(1000)
-            remaining -= 1
-            if not isSick then
-                break
-            end
-        end
-    end)
-
-    -- Animation + Health Tick Thread
-    CreateThread(function()
-        DebugPrint("Starting sickness animation/health tick thread.")
-        local ped = PlayerPedId()
-
-        while isSick and remaining > 0 do
-            ClearPedTasks(ped)
-            DebugPrint("Cleared ped tasks for sickness animation.")
-
-            local currentHealth = GetEntityHealth(ped)
-            local newHealth = currentHealth - healthPerTick
-
-            -- Play animation
-            if remaining > (duration / 2) then
-                DebugPrint("Playing coughing animation.")
-                PlayAnim("amb_wander@code_human_coughing_hacking@male_a@wip_base", "wip_base")
-            else
-                local vomit = math.random(1, 2) == 1 and "idle_g" or "idle_h"
-                DebugPrint("Playing vomiting animation: " .. vomit)
-                PlayAnim("amb_misc@world_human_vomit@male_a@idle_c", vomit)
-            end
-
-            -- Apply health damage
-            if newHealth <= 0 then
-                DebugPrint("Player health reached 0 during sickness. Killing player.")
-                SetEntityHealth(ped, 0)
-                break
-            else
-                SetEntityHealth(ped, newHealth)
-                DebugPrint("Health reduced by sickness. New health: " .. newHealth)
-            end
-
-            Wait(tickInterval * 1000)
-        end
-
-        if isSick then
-            DebugPrint("Sickness ended. Forcing death if still alive.")
-            Core.NotifyRightTip("You succumb to the sickness...", 6000)
-            SetEntityHealth(ped, 0)
-            isSick = false
-            ClearPedTasks(ped)
-            DebugPrint("Sickness effect fully cleared.")
-        end
-    end)
-
-    TriggerServerEvent("bcc-water:UpdateSickness", duration)
-    DebugPrint("Triggered server event to update sickness status.")
-end
-
-
-RegisterNetEvent("ApplySicknessEffect", function(duration, tick, fatal)
-    ApplySicknessEffect(duration, tick, fatal)
-end)
-
-RegisterNetEvent("bcc-water:CureSickness", function()
-    if isSick then
-        isSick = false
-        ClearPedTasks(PlayerPedId())
-        Core.NotifyRightTip("You feel better after taking the antidote.", 4000)
-        TriggerServerEvent("bcc-water:UpdateSickness", 0)
-    end
-end)
-
-function PlayAnim(dict, anim, flag)
-    local ped = PlayerPedId()
-    flag = flag or 1 -- default flag if not passed
-
-    RequestAnimDict(dict)
-    while not HasAnimDictLoaded(dict) do
-        Wait(10)
-    end
-
-    TaskPlayAnim(ped, dict, anim, 8.0, -8.0, -1, flag, 0, false, false, false)
-end
-
 AddEventHandler('onResourceStop', function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then return end
 
-    DebugPrint("Resource stopped, cleaning up...")
+    DebugPrint('Resource stopped, cleaning up...')
     ClearPedTasksImmediately(PlayerPedId())
 
     if Canteen then
         DeleteObject(Canteen)
+    end
+
+    if Bottle then
+        DeleteObject(Bottle)
     end
 
     if Container then
@@ -369,5 +274,5 @@ AddEventHandler('onResourceStop', function(resourceName)
         UiPromptDelete(prompt)
         Prompts[name] = nil
     end
-    DebugPrint("Cleanup complete.")
+    DebugPrint('Cleanup complete.')
 end)
