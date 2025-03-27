@@ -66,7 +66,7 @@ function OpenInputMenu(itemType, pump)
         slot = 'footer',
         style = {}
     }, function()
-        local hasItems = Core.Callback.TriggerAwait('bcc-water:GetItem', itemType, itemAmount)
+        local hasItems = Core.Callback.TriggerAwait('bcc-water:GetItem', itemType, itemAmount or 1, pump)
         if hasItems then
             InputMenu:Close()
             if itemType == 'bucket' then
