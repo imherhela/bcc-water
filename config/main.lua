@@ -4,7 +4,7 @@ Config = {
     ---------------------------------------------------------------
 
     devMode = {
-        active  = true,      -- When active, you can restart the script while connected for testing (otherwise requires relog)
+        active  = false,      -- When active, you can restart the script while connected for testing (otherwise requires relog)
         command = 'WaterDev', -- Command to start the script functions
     },
     ---------------------------------------------------------------
@@ -18,7 +18,8 @@ Config = {
     -- NXT Metabolism Paid          = 7
     -- Andrade Metabolism Paid      = 8
     -- FX-HUD                       = 9
-    app = 5,
+    -- Mega Metabolism              = 10
+    app = 1,
     ---------------------------------------------------------------
 
     keys = {
@@ -63,7 +64,8 @@ Config = {
         }
     },
 
-    sicknessChance = 25,
+    -- Chance to Get Sick by Drinking from Wild Waters
+    sicknessChance = 25, -- Range 1 - 100 (lower number = lower chance) / Set to 0 to Disable
 
     ---------------------------------------------------------------
 
