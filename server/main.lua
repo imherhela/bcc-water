@@ -217,26 +217,37 @@ exports.vorp_inventory:registerUsableItem(Config.canteen, function(data)
 end)
 
 -- Clean Bottle (no sickness)
-exports.vorp_inventory:registerUsableItem(Config.cleanBottle, function(data)
-    local src = data.source
-    exports.vorp_inventory:closeInventory(src)
-    exports.vorp_inventory:subItemById(src, data.item.id)
-    TriggerClientEvent('bcc-water:DrinkBottle', src, false)
-end)
+if Config.useable.cleanBottle then
+    DebugPrint('Registering clean bottle as usable item')
+    exports.vorp_inventory:registerUsableItem(Config.cleanBottle, function(data)
+        local src = data.source
+        exports.vorp_inventory:closeInventory(src)
+        exports.vorp_inventory:subItemById(src, data.item.id)
+        exports.vorp_inventory:addItem(src, Config.emptyBottle, 1)
+        TriggerClientEvent('bcc-water:DrinkBottle', src, false)
+    end)
+end
 
 -- Dirty Bottle (sickness chance)
-exports.vorp_inventory:registerUsableItem(Config.dirtyBottle, function(data)
-    local src = data.source
-    exports.vorp_inventory:closeInventory(src)
-    exports.vorp_inventory:subItemById(src, data.item.id)
-    TriggerClientEvent('bcc-water:DrinkBottle', src, true)
-end)
+if Config.useable.dirtyBottle then
+    DebugPrint('Registering dirty bottle as usable item')
+    exports.vorp_inventory:registerUsableItem(Config.dirtyBottle, function(data)
+        local src = data.source
+        exports.vorp_inventory:closeInventory(src)
+        exports.vorp_inventory:subItemById(src, data.item.id)
+        exports.vorp_inventory:addItem(src, Config.emptyBottle, 1)
+        TriggerClientEvent('bcc-water:DrinkBottle', src, true)
+    end)
+end
 
-exports.vorp_inventory:registerUsableItem(Config.antidoteItem, function(data)
-    local src = data.source
-    exports.vorp_inventory:closeInventory(src)
-    exports.vorp_inventory:subItem(src, Config.antidoteItem, 1)
-    TriggerClientEvent('bcc-water:CureSickness', src)
-end)
+if Config.useable.antidoteItem then
+    DebugPrint('Registering antidote item as usable item')
+    exports.vorp_inventory:registerUsableItem(Config.antidoteItem, function(data)
+        local src = data.source
+        exports.vorp_inventory:closeInventory(src)
+        exports.vorp_inventory:subItem(src, Config.antidoteItem, 1)
+        TriggerClientEvent('bcc-water:CureSickness', src)
+    end)
+end
 
 BccUtils.Versioner.checkFile(GetCurrentResourceName(), 'https://github.com/BryceCanyonCounty/bcc-water')
