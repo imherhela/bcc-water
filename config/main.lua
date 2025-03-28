@@ -88,6 +88,14 @@ Config = {
     },
     ---------------------------------------------------------------
 
+    -- Register Items as Useable
+    useable = {
+        cleanBottle = true,
+        dirtyBottle = true,
+        antidoteItem = true,
+    },
+    ---------------------------------------------------------------
+
     -- Objects Where You Can Get Water
     objects = {
         'p_waterpump01x',
